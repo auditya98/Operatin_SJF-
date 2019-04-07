@@ -1,21 +1,81 @@
 #include<stdio.h>
 #include<conio.h>
 #include<string.h>
-void main()          //without wait function and the constraint of having at most 10 second of cpu burst time
+
+int et[20],at[10],n,i,j,temp,st[10],ft[10],wt[10],ta[10];
+int totwt=0,totta=0;
+float awt,ata;
+char pn[10][10],t[10];
+
+int main()
 {
-    int et[20],at[10],n,i,j,temp,st[10],ft[10],wt[10],ta[10];
-    int totwt=0,totta=0;
-    float awt,ata;
-    char pn[10][10],t[10];
     //clrscr();
     printf("Enter the number of process:");
     scanf("%d",&n);
     for(i=0; i<n; i++)
     {
-        printf("Enter process name, arrival time& execution time:");
+        printf("Enter Process Name || Arrival Time || Execution Time:");
         //flushall();
         scanf("%s%d%d",pn[i],&at[i],&et[i]);
     }
+    printf("Select sheduling algorithm \n");
+    int p=0;
+    printf("Press 1 : Longest job first or Press 2 : Shortest job first :");
+    scanf("%d",&p);
+    if(p==1)
+    {
+        ljf();
+    }
+    else if(p==2)
+    {
+        sjf();
+    }
+    else{
+        printf("Press a valid option!");
+    }
+}
+
+ int ljf(){
+    for(i=0; i<n; i++)
+        for(j=0; j<n; j++)
+        {
+            if(et[i]>et[j])
+            {
+                temp=at[i];
+                at[i]=at[j];
+                at[j]=temp;
+                temp=et[i];
+                et[i]=et[j];
+                et[j]=temp;
+                strcpy(t,pn[i]);
+                strcpy(pn[i],pn[j]);
+                strcpy(pn[j],t);
+            }
+        }
+    for(i=0; i<n; i++)
+    {
+        if(i==0)
+            st[i]=at[i];
+        else
+            st[i]=ft[i-1];
+        wt[i]=st[i]-at[i];
+        ft[i]=st[i]+et[i];
+        ta[i]=ft[i]-at[i];
+        totwt+=wt[i];
+        totta+=ta[i];
+    }
+    awt=(float)totwt/n;
+    ata=(float)totta/n;
+    printf("\nProcess name\tArrival time\tExecution time\tWaiting time\tTurnaround-time");
+    for(i=0; i<n; i++)
+        printf("\n%s\t%5d\t\t%5d\t\t%5d\t\t%5d",pn[i],at[i],et[i],wt[i],ta[i]);
+    printf("\nAverage Waiting time is:%f",awt);
+    printf("\nAverage Turnaroundtime is:%f",ata);
+    getch();
+}
+
+int sjf()
+   {
     for(i=0; i<n; i++)
         for(j=0; j<n; j++)
         {
@@ -46,10 +106,10 @@ void main()          //without wait function and the constraint of having at mos
     }
     awt=(float)totwt/n;
     ata=(float)totta/n;
-    printf("\nPname\tarrivaltime\texecutiontime\twaitingtime\ttatime");
+    printf("\nProcess name\tArrival time\tExecution time\tWaiting time\tTurnaround-time");
     for(i=0; i<n; i++)
         printf("\n%s\t%5d\t\t%5d\t\t%5d\t\t%5d",pn[i],at[i],et[i],wt[i],ta[i]);
-    printf("\nAverage waiting time is:%f",awt);
-    printf("\nAverage turnaroundtime is:%f",ata);
+    printf("\nAverage Waiting time is:%f",awt);
+    printf("\nAverage Turnaroundtime is:%f",ata);
     getch();
 }
